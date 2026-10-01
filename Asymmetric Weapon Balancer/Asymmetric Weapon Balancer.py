@@ -220,7 +220,7 @@ def bodies_from_tokens(design, tokens):
             raise RuntimeError('A selected body no longer exists after the rebuild. '
                                'The parameter value probably breaks the model.')
         for b in found:
-            if not any(b == other for other in bodies):
+            if not any(b.entityToken == other.entityToken for other in bodies):
                 bodies.append(b)
     return bodies
 
