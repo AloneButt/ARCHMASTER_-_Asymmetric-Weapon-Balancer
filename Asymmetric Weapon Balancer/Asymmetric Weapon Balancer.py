@@ -220,7 +220,7 @@ def bodies_from_tokens(design, tokens):
             raise RuntimeError('A selected body no longer exists after the rebuild. '
                                'The parameter value probably breaks the model.')
         for b in found:
-            if not any(b == other for other in bodies):
+            if not any(b.entityToken == other.entityToken for other in bodies):
                 bodies.append(b)
     return bodies
 
@@ -426,13 +426,20 @@ def solve(evaluate, lo, hi, x_ref, fmt=str, tick=None):
 
     report = scan_report(along)
 
-    # 3. bracket
+        # 3. bracket: of all crossings in the range, take the one nearest the
+    #    current value (smallest change), not simply the first one scanned
     pts = [(x, along(ab)) for x, ab in valid]
-    a = fa = b = fb = None
+    candidates = []                       # (estimated root, a, fa, b, fb)
+    for x, f in pts:
+        if f == 0.0:
+            candidates.append((x, x, 0.0, x, 0.0))
     for (x1, f1), (x2, f2) in zip(pts, pts[1:]):
-        if f1 == 0.0 or f1 * f2 < 0.0:
-            a, fa, b, fb = x1, f1, x2, f2
-            break
+        if f1 * f2 < 0.0:
+            est = x1 - f1 * (x2 - x1) / (f2 - f1)      # linear estimate of the root
+            candidates.append((est, x1, f1, x2, f2))
+    a = fa = b = fb = None
+    if candidates:
+        _, a, fa, b, fb = min(candidates, key=lambda c: abs(c[0] - x_ref))
     if a is None:
         best = min(pts, key=lambda p: abs(p[1]))
         raise SolveError('The centre of mass never crosses the axis in this range '

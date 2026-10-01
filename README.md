@@ -104,6 +104,10 @@ If the solve fails or you cancel it, every dimension is restored to its original
 
 The add-in was created to help design asymmetric spinner weapons for combat robot tournaments.
 
+## Updates - sharajshreyas
+
+- Improve root estimation in bracket method
+
 ## License
 
 MIT - see [LICENSE](LICENSE). Free to use, modify and share.
