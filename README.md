@@ -107,6 +107,7 @@ The add-in was created to help design asymmetric spinner weapons for combat robo
 ## Updates - sharajshreyas
 
 - Improve root estimation in bracket method
+- Update body comparison to use entityToken
 
 ## License
 
